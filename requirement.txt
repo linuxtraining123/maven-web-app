@@ -1,2 +1,3 @@
 maven is build tool
 Easy to learn
+Training is not needed
