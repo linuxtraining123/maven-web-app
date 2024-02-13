@@ -1,54 +1,71 @@
-node{
-    
-    stage('Clone repo'){
-        git credentialsId: 'GIT-Credentials', url: 'https://github.com/javabyraghu/maven-web-app.git'
+pipeline {
+    agent any
+
+     options {
+      buildDiscarder(logRotator(numToKeepStr: '10'))
     }
-    
-    stage('Maven Build'){
-        def mavenHome = tool name: "Maven-3.8.6", type: "maven"
-        def mavenCMD = "${mavenHome}/bin/mvn"
-        sh "${mavenCMD} clean package"
+
+    environment {
+        PATH="${PATH}:/opt/maven/bin"
+        DOCKER_HUB_CREDENTIALS_ID = "de2f615f-46ce-4439-b815-b671c375bc7f"
+        IMAGE_NAME="mavenpipelineimage"
+        docker_repo="linuxtraining123"
+        APP_NAME = 'maven-app'
+        VERSION  = '1.0.0'
     }
-    
-    stage('SonarQube analysis') {       
-        withSonarQubeEnv('Sonar-Server-7.8') {
-       	sh "mvn sonar:sonar"    	
-    }
-        
-    stage('upload war to nexus'){
-	steps{
-		nexusArtifactUploader artifacts: [	
-			[
-				artifactId: '01-maven-web-app',
-				classifier: '',
-				file: 'target/01-maven-web-app.war',
-				type: war		
-			]	
-		],
-		credentialsId: 'nexus3',
-		groupId: 'in.javabyraghu',
-		nexusUrl: '',
-		protocol: 'http',
-		repository: 'javabyraghu-release'
-		version: '1.0.0'
-	}
-}
-    
-    stage('Build Image'){
-        sh 'docker build -t javabyraghu/mavenwebapp .'
-    }
-    
-    stage('Push Image'){
-        withCredentials([string(credentialsId: 'DOCKER-CREDENTIALS', variable: 'DOCKER_CREDENTIALS')]) {
-            sh 'docker login -u javabyraghu -p ${DOCKER_CREDENTIALS}'
+
+    stages {
+
+        stage ('Build DisplayName')  {
+            steps {
+                script {
+                    env
+                def buildDisplayName = currentBuild.displayName
+                def branchName = env.BRANCH_NAME
+                echo "Current branch name: ${branchName}"
+                currentBuild.displayName = "${APP_NAME}-${branchName}-${BUILD_NUMBER}"
+                }
+                }
+
+         } 
+        stage('Git Clone my Maven Repository') {
+            steps {
+                git branch: 'main', credentialsId: '4b8704da-0a6b-4489-b2d7-477c62f7026b', url: 'https://github.com/linuxtraining123/maven-web-app.git'
+
+            }
         }
-        sh 'docker push javabyraghu/mavenwebapp'
+
+        stage('Maven Build package') {
+            steps {
+                sh '''
+                mvn clean package
+                '''
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Define build number 
+                    def buildNumber = env.BUILD_NUMBER
+                    env.BUILD_NUMBER_ENV = buildNumber
+                    echo "BUILD_NUMBER_ENV: ${env.BUILD_NUMBER_ENV}"
+
+
+                    withCredentials([usernamePassword(credentialsId: DOCKER_HUB_CREDENTIALS_ID, usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]){
+
+                    sh '''
+                    env
+                    docker login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD} 
+                    docker build -t ${IMAGE_NAME}-${BUILD_NUMBER} .
+                    docker image ls 
+                    docker tag ${IMAGE_NAME}-${BUILD_NUMBER} ${docker_repo}/${IMAGE_NAME}:${BUILD_NUMBER}
+                    docker image ls
+                    docker push ${docker_repo}/${IMAGE_NAME}:${BUILD_NUMBER}
+                    '''
+                   }
+                }
+            }
+        }
     }
-    
-    stage('Deploy App'){
-        kubernetesDeploy(
-            configs: 'maven-web-app-deploy.yml',
-            kubeconfigId: 'Kube-Config'
-        )
-    }    
 }
