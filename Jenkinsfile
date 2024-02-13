@@ -1,4 +1,5 @@
-pipeline {
+def call() {
+    pipeline {
     agent any
 
      options {
@@ -68,4 +69,5 @@ pipeline {
             }
         }
     }
+}
 }
