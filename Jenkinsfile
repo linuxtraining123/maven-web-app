@@ -16,6 +16,15 @@ pipeline {
 
     stages {
 
+                stage('Git Checkout and Capture Branch') {
+            steps {
+                script {
+                    // Checkout the code and capture the branch name
+                    git branch: 'main', credentialsId: '4b8704da-0a6b-4489-b2d7-477c62f7026b', url: 'https://github.com/linuxtraining123/maven-web-app.git'
+                    env.BRANCH_NAME = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+                }
+            }
+        }
         stage ('Build DisplayName')  {
             steps {
                 script {
@@ -28,12 +37,6 @@ pipeline {
                 }
 
          } 
-        stage('Git Clone my Maven Repository') {
-            steps {
-                git branch: 'main', credentialsId: '4b8704da-0a6b-4489-b2d7-477c62f7026b', url: 'https://github.com/linuxtraining123/maven-web-app.git'
-
-            }
-        }
 
         stage('Maven Build package') {
             steps {
