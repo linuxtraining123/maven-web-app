@@ -1,3 +1,10 @@
+properties([
+
+        parameters([
+            string(defaultvalue: 'training' , description: 'Giving the name of class' , name: 'CLASS', trim: false  )
+            string(defaultvalue: 'timings' , description: 'Giving the timings of a  class' , name: 'TIME', trim: false  )
+        ])
+])
 pipeline {
     agent any
 
