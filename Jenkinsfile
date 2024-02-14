@@ -44,7 +44,23 @@ properties([
  
             }
         }
-        
+
+stage('Stage 2') {
+      agent none
+      steps {
+        timeout(time: 1, unit: 'MINUTES') {
+          script {
+            echo 'This stage does not block an executor because of "agent none"'
+            milestone 1
+            inputResponse = input([
+              message           : 'Please confirm.'
+
+            ])
+            echo "Input response: ${inputResponse}"
+          }
+        }
+      }
+    }
         stage ('Build DisplayName')  {
             steps {
                 script {
