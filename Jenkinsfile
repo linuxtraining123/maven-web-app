@@ -34,13 +34,15 @@ properties([
 
         stage('choice paramter example') {
             when {
-                allOf {
+        
                 expression { params.CLASS == 'class2' }
-                }
+            
             steps {
-                sh '''
+                script {
                 echo " This is class2"
-                '''
+
+                }
+ 
             }
         }
         }
@@ -59,11 +61,11 @@ properties([
 
         stage('Maven Build package') {
             steps {
-                 script {
+                
                 sh '''
                 mvn clean package
                 '''
-            }
+            
             }
         }
 
