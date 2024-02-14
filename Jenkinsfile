@@ -1,17 +1,3 @@
-properties([
-    parameters([
-        string(defaultValue: 'itops', description: 'account name for APPlication services service', name: 'ACCOUNT', trim: false),
-
-        string(defaultValue: 'arn:aws:iam::478919:role/cbc-itops', description: 'pod IAM role', name: 'CBT_ROLE', trim: false),
-
-        string(defaultValue: 'arn:aws:iam::478914:role/cb-jenkins', description: 'IAM role to be assumed in  DEV AWS account', name: 'DEV_ROLE', trim: false),
-
-        string(defaultValue: 'arn:aws:iam::478956:role/mgmt-cb-jenkins', description: 'IAM role to be assumed in  TEST AWS account', name: 'TEST_ROLE', trim: false),
-
-        string(defaultValue: 'arn:aws:iam::4789:role/prod-cbj-jenkins ', description: 'IAM role to be assumed in  PROD AWS account', name: 'PROD_ROLE', trim: false)
-    ])
-])
-
 pipeline {
     agent any
 
