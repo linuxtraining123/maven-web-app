@@ -34,9 +34,7 @@ properties([
 
         stage('choice paramter example') {
             when {
-                anyof  { 
-                    params.CLASS == 'class2' 
-                }
+                    params.CLASS == 'class2'   
             }
             steps {
                 script {
@@ -46,7 +44,7 @@ properties([
  
             }
         }
-        }
+        
         stage ('Build DisplayName')  {
             steps {
                 script {
