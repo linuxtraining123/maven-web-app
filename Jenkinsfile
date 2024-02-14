@@ -34,8 +34,9 @@ properties([
 
         stage('choice paramter example') {
             when {
-        
-                expression { params.CLASS == 'class2' }
+                anyof  { 
+                    params.CLASS == 'class2' 
+                }
             
             steps {
                 script {
