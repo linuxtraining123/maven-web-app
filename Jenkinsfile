@@ -1,6 +1,7 @@
 pipeline {
     agent any
 
+properties([
     parameters([
         choice(choices: ['class1', 'class2', 'class3'], description: 'Select the class', name: 'CLASS'),
         choice(choices: ['time1', 'time2', 'time3'], description: 'Select the class timings', name: 'TIME')
@@ -9,6 +10,7 @@ pipeline {
      options {
       buildDiscarder(logRotator(numToKeepStr: '10'))
     }
+])
 
     environment {
         PATH="${PATH}:/opt/maven/bin"
