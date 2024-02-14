@@ -69,6 +69,9 @@ properties([
         }
 
         stage('Build Docker Image') {
+            when {
+                    params.CLASS == 'class2'   
+            }
             steps {
                 script {
                     // Define build number 
