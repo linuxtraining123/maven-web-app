@@ -1,12 +1,10 @@
-properties([
-
-        parameters([
-            string(defaultvalue: 'training' , description: 'Giving the name of class' , name: 'CLASS', trim: false  ),
-            string(defaultvalue: 'timings' , description: 'Giving the timings of a  class' , name: 'TIME', trim: false  )
-        ])
-])
 pipeline {
     agent any
+
+    parameters([
+        choice(choices: ['class1', 'class2', 'class3'], description: 'Select the class', name: 'CLASS'),
+        choice(choices: ['time1', 'time2', 'time3'], description: 'Select the class timings', name: 'TIME')
+    ])
 
      options {
       buildDiscarder(logRotator(numToKeepStr: '10'))
