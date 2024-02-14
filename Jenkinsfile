@@ -31,6 +31,16 @@ properties([
                 }
             }
         }
+
+        stage('choice paramter example') {
+            when {
+                params.CLASS=class2
+            steps {
+                sh '''
+                echo " This is class2"
+                '''
+            }
+        }
         stage ('Build DisplayName')  {
             steps {
                 script {
