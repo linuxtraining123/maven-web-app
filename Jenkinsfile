@@ -41,6 +41,7 @@ properties([
                 '''
             }
         }
+        }
         stage ('Build DisplayName')  {
             steps {
                 script {
