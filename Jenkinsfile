@@ -39,7 +39,7 @@ pipeline {
                 def buildDisplayName = currentBuild.displayName
                 def branchName = env.BRANCH_NAME
                 echo "Current branch name: ${branchName}"
-                currentBuild.displayName = "${APP_NAME}-${branchName}-${BUILD_NUMBER}"
+                currentBuild.displayName = "${APP_NAME}-${branchName}-${BUILD_NUMBER}-${params.CLASS}"
                 }
                 }
 
