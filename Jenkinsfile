@@ -34,7 +34,7 @@ properties([
 
         stage('choice paramter example') {
             when {
-                anyOf {
+                allOf {
                 expression { params.CLASS == 'class2' }
                 }
             steps {
@@ -59,9 +59,11 @@ properties([
 
         stage('Maven Build package') {
             steps {
+                 script {
                 sh '''
                 mvn clean package
                 '''
+            }
             }
         }
 
