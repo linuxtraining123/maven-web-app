@@ -37,7 +37,7 @@ properties([
                 anyof  { 
                     params.CLASS == 'class2' 
                 }
-            
+            }
             steps {
                 script {
                 echo " This is class2"
